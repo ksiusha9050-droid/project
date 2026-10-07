@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load time_filters %}
+
+{% block title %}Статистика{% endblock %}
+
+{% block content %}
+<h2>Моя статистика</h2>
+
+{% if sessions_count == 0 %}
+    <p>Статистики пока нет — завершите хотя бы одну сессию.</p>
+{% else %}
+    <table>
+        <tr>
+            <td>Всего сессий</td>
+            <td><b>{{ sessions_count }}</b></td>
+        </tr>
+        <tr>
+            <td>Из них честных</td>
+            <td><b>{{ honest_count }}</b></td>
+        </tr>
+        <tr>
+            <td>Всего времени</td>
+            <td><b>{{ total_minutes|hours }}</b></td>
+        </tr>
+        <tr>
+            <td>Подтверждено проверками</td>
+            <td><b>{{ verified_minutes|hours }}</b></td>
+        </tr>
+        <tr>
+            <td>Потеряно на прогулах</td>
+            <td><b>{{ lost_minutes|hours }}</b></td>
+        </tr>
+    </table>
+
+    <p>Общая честность: <b>{{ percent }}%</b><br>
+       <progress value="{{ percent }}" max="100"></progress></p>
+
+    {% if percent >= 90 %}
+        <p class="green">Отлично! Вы почти не отвлекаетесь.</p>
+    {% elif percent >= 50 %}
+        <p>Неплохо, но бывают пропуски проверок.</p>
+    {% else %}
+        <p class="red">Слишком много прогулов, надо собраться!</p>
+    {% endif %}
+{% endif %}
+{% endblock %}

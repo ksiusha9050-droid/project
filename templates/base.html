@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Анти-прогул{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <header>
+        <div class="logo">Анти-прогул</div>
+        {% if user.is_authenticated %}
+            <nav>
+                <a href="{% url 'home' %}">Главная</a>
+                <a href="{% url 'history' %}">История</a>
+                <a href="{% url 'stats' %}">Статистика</a>
+                <span class="username">{{ user.username }}</span>
+                <form action="{% url 'logout' %}" method="post" class="inline">
+                    {% csrf_token %}
+                    <button type="submit" class="link-btn">Выйти</button>
+                </form>
+            </nav>
+        {% endif %}
+    </header>
+
+    <main>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

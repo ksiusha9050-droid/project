@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load time_filters %}
+{% block title %}История{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>История работы</h2>
+
+    {% if sessions %}
+        <table>
+            <tr>
+                <th>№</th>
+                <th>Дата</th>
+                <th>Задача</th>
+                <th>Длительность</th>
+                <th>Проверки</th>
+                <th>Итог</th>
+                <th></th>
+            </tr>
+            {% for s in sessions %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ s.start_time|date:"d.m.Y H:i" }}</td>
+                    <td>{{ s.task|truncatechars:30 }}</td>
+                    <td>{{ s.duration_minutes|hours }}</td>
+                    <td>{{ s.passed_checks }} из {{ s.expected_checks }}</td>
+                    <td>
+                        {% if s.status == 'Честная работа' %}
+                            <span class="badge green">{{ s.status }}</span>
+                        {% elif s.status == 'Прогул' %}
+                            <span class="badge red">{{ s.status }}</span>
+                        {% else %}
+                            <span class="badge yellow">{{ s.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td><a href="{% url 'session_detail' s.id %}">Подробнее</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>Пока нет ни одной сессии. <a href="{% url 'home' %}">Начните работу!</a></p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load time_filters %}
+
+{% block title %}Сессия{% endblock %}
+
+{% block content %}
+<h2>Сессия: {{ session.task }}</h2>
+
+<table>
+    <tr>
+        <td>Начало</td>
+        <td>{{ session.start_time|date:"d.m.Y H:i" }}</td>
+    </tr>
+    <tr>
+        <td>Конец</td>
+        <td>
+            {% if session.end_time %}
+                {{ session.end_time|date:"d.m.Y H:i" }}
+            {% else %}
+                ещё идёт
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>Всего времени</td>
+        <td>{{ session.duration_minutes|hours }}</td>
+    </tr>
+    <tr>
+        <td>Засчитано (подтверждено)</td>
+        <td>{{ session.verified_minutes|hours }}</td>
+    </tr>
+    <tr>
+        <td>Проверок должно быть</td>
+        <td>{{ session.expected_checks }}</td>
+    </tr>
+    <tr>
+        <td>Пройдено / провалено</td>
+        <td>{{ session.passed_checks }} / {{ session.failed_checks }}</td>
+    </tr>
+    <tr>
+        <td>Пропущено всего</td>
+        <td>{{ session.missed_checks }}</td>
+    </tr>
+</table>
+
+<p>Честность: <b>{{ session.honest_percent }}%</b><br>
+   <progress value="{{ session.honest_percent }}" max="100"></progress></p>
+<p>Итог: <b>{{ session.status }}</b></p>
+
+<h2>Проверки</h2>
+{% if checks %}
+    <table>
+        <tr>
+            <th>Время</th>
+            <th>Код</th>
+            <th>Результат</th>
+        </tr>
+        {% for c in checks %}
+            <tr>
+                <td>{{ c.created_at|date:"H:i:s" }}</td>
+                <td>{{ c.code }}</td>
+                {% if c.passed %}
+                    <td class="green">пройдена</td>
+                {% elif c.answered_at %}
+                    <td class="red">не пройдена</td>
+                {% else %}
+                    <td>ждёт ответа</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>Проверок не было — сессия была слишком короткой.</p>
+{% endif %}
+
+<p><a href="{% url 'history' %}">&larr; Назад к истории</a></p>
+{% endblock %}

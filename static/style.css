@@ -1,0 +1,127 @@
+body {
+    font-family: Verdana, Arial, sans-serif;
+    font-size: 15px;
+    background-color: #dfe9f3;
+    color: #222;
+    margin: 0;
+}
+
+.page {
+    width: 760px;
+    margin: 0 auto;
+    padding: 15px 20px;
+    background-color: white;
+    min-height: 100vh;
+    box-sizing: border-box;
+    border-left: 1px solid #c9d6e3;
+    border-right: 1px solid #c9d6e3;
+}
+
+header h1 {
+    margin: 5px 0;
+    font-size: 26px;
+    color: #1d4e89;
+}
+
+header p {
+    margin: 0 0 10px 0;
+    color: #777;
+    font-size: 13px;
+}
+
+.menu {
+    padding: 8px 0;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    overflow: hidden;
+}
+
+.menu a {
+    color: #1d4e89;
+    margin-right: 5px;
+}
+
+.menu .user {
+    float: right;
+    color: #555;
+}
+
+.menu .user form {
+    display: inline;
+}
+
+.menu .user button {
+    font-size: 13px;
+    padding: 1px 6px;
+    margin-left: 5px;
+}
+
+h2 {
+    color: #1d4e89;
+    font-size: 20px;
+    border-bottom: 2px solid #1d4e89;
+    padding-bottom: 3px;
+}
+
+table {
+    border-collapse: collapse;
+    margin: 10px 0;
+}
+
+td, th {
+    border: 1px solid #999;
+    padding: 5px 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #e8eef5;
+}
+
+input[type=text], input[type=password] {
+    padding: 4px;
+    width: 250px;
+}
+
+button {
+    padding: 4px 12px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.error-text {
+    color: #c0392b;
+    font-size: 13px;
+}
+
+.check {
+    border: 2px dashed #c0392b;
+    padding: 5px 15px 15px 15px;
+    margin: 15px 0;
+}
+
+.code {
+    font-size: 36px;
+    font-weight: bold;
+    letter-spacing: 6px;
+    color: #c0392b;
+}
+
+.message {
+    border: 1px solid #999;
+    background-color: #ffffe0;
+    padding: 6px 10px;
+    margin: 10px 0;
+}
+
+.message.error {
+    background-color: #fde2e2;
+}
+
+.green { color: green; }
+.red   { color: #c0392b; }
+.gray  { color: #888; }
+
+progress {
+    width: 300px;
+}

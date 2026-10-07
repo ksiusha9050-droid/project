@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+
+{% if not session %}
+    <h2>Начать работу</h2>
+    <p>Напишите, чем будете заниматься, и нажмите «Начать». Трекер будет считать время,
+       а иногда попросит ввести код — так он проверяет, что вы на месте.</p>
+
+    <form action="{% url 'start_session' %}" method="post">
+        {% csrf_token %}
+        {{ form.task }}
+        <button type="submit">Начать</button>
+    </form>
+
+{% else %}
+    <h2>Идёт работа</h2>
+    <p>
+        Задача: <b>{{ session.task }}</b><br>
+        Начало: {{ session.start_time|date:"d.m.Y H:i" }}<br>
+        Прошло: <b id="timer" data-seconds="{{ elapsed_seconds }}">00:00:00</b><br>
+        Проверок пройдено: {{ session.passed_checks }}
+    </p>
+
+    <form action="{% url 'stop_session' %}" method="post"
+          onsubmit="return confirm('Точно закончить работу?');">
+        {% csrf_token %}
+        <button type="submit">Закончить работу</button>
+    </form>
+
+    {% if check %}
+        <div class="check">
+            <h3 class="red">Проверка присутствия!</h3>
+            <p>Введите код: <span class="code">{{ check.code }}</span></p>
+            <p>Осталось <b id="left" data-left="{{ check.seconds_left }}">{{ check.seconds_left }}</b> сек.</p>
+
+            <form action="{% url 'verify' check.id %}" method="post">
+                {% csrf_token %}
+                {{ check_form.code }}
+                <button type="submit">Подтвердить</button>
+            </form>
+        </div>
+    {% else %}
+        <p class="gray">Следующая проверка примерно через {{ next_check }} мин.
+           Страница обновится сама.</p>
+    {% endif %}
+
+    <script>
+        let timer = document.getElementById('timer');
+        let seconds = Number(timer.dataset.seconds);
+        function twoDigits(n) {
+            if (n < 10) {
+                return '0' + n;
+            }
+            return n;
+        }
+        function updateTimer() {
+            seconds = seconds + 1;
+            let h = Math.floor(seconds / 3600);
+            let m = Math.floor((seconds % 3600) / 60);
+            let s = seconds % 60;
+            timer.textContent = twoDigits(h) + ':' + twoDigits(m) + ':' + twoDigits(s);
+        }
+        updateTimer();
+        setInterval(updateTimer, 1000);
+
+        let leftSpan = document.getElementById('left');
+
+        if (leftSpan) {
+            let left = Number(leftSpan.dataset.left);
+            function updateLeft() {
+                left = left - 1;
+                if (left <= 0) {
+                    alert('Время на проверку вышло!');
+                    location.reload();
+                    return;
+                }
+                leftSpan.textContent = left;
+            }
+            setInterval(updateLeft, 1000);
+        } else {
+            setTimeout(function () {
+                location.reload();
+            }, 60000);
+        }
+    </script>
+{% endif %}
+
+{% endblock %}
